@@ -1,0 +1,13 @@
+.button {
+  padding: 21.5px 80px;
+  background: #0078fa;
+  color: #fdfdfd;
+  border-radius: 13px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.button-dark {
+  background: #1b1d21;
+}

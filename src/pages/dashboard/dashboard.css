@@ -1,0 +1,46 @@
+.dashboard-padding {
+  margin-top: 5%;
+}
+
+.dashboard-padding h1 {
+  font-weight: 500;
+}
+
+.survey-actions-first {
+  margin-top: 60px;
+}
+
+.create-survey-first {
+  position: relative;
+  height: 315px;
+  border-radius: 13px;
+  background: #6f5cda;
+  color: #fff;
+  overflow: hidden;
+  clear: both;
+}
+
+.create-survey-first img {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.create-survey-first-content {
+  max-width: 520px;
+  width: 100%;
+  padding: 65px 63px;
+}
+
+.create-survey-first-content p,
+.explore-survey-first p {
+  line-height: 150%;
+}
+
+.explore-survey-first {
+  height: 315px;
+  border-radius: 13px;
+  background: #ffcc61;
+  color: #1b1d21;
+  padding: 66px 40px;
+}
