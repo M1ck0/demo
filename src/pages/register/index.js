@@ -1,33 +1,34 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 import Button from "common/components/button";
 import Input from "common/components/input";
 
 import { usersState } from "recoil/atom/users";
-import { userState } from "recoil/atom/user";
+import { Link } from "react-router-dom";
 
 const schema = yup
   .object({
+    username: yup.string().required("Username is required"),
     email: yup.string().email("Email must be valid").required("Email is required"),
     password: yup
       .string()
       .required("Password is required")
       .min(6, "Password is too short - should be 6 chars minimum."),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "Passwords must match"),
   })
   .required();
 
-const Login = () => {
-  const [loggedIn, setLoggedIn] = useState(null);
-
-  const users = useRecoilValue(usersState);
-  const setLoginUser = useSetRecoilState(userState);
+const Register = () => {
+  const [users, setUsers] = useRecoilState(usersState);
+  const [created, setCreated] = useState(null);
 
   const navigate = useNavigate();
 
@@ -40,40 +41,47 @@ const Login = () => {
   });
 
   const onSubmit = (data) => {
-    const user = users.find(
-      (user) => user.email === data.email && user.password === data.password
-    );
+    // check if user already exists
+    const user = users.find((user) => user.email === data.email);
 
     if (user) {
-      setLoginUser(user);
-      setLoggedIn(true);
+      setCreated(false);
     } else {
-      setLoggedIn(false);
+      setUsers((prevState) => [...prevState, data]);
+      setCreated(true);
     }
-  };
 
-  useEffect(() => {
     setTimeout(() => {
-      if (loggedIn === true) {
-        navigate("/");
-      }
-
-      setLoggedIn(null);
+      navigate("/login");
     }, 1000);
-  }, [loggedIn]);
+  };
 
   return (
     <>
       <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 mx-4">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Log in to your account
+            Create your account
           </h2>
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <Controller
+                name="username"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <Input
+                    label="Username"
+                    placeholder="Username"
+                    type="text"
+                    error={errors.username}
+                    {...field}
+                  />
+                )}
+              />
               <Controller
                 name="email"
                 control={control}
@@ -103,17 +111,33 @@ const Login = () => {
                   />
                 )}
               />
+              <Controller
+                name="confirmPassword"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <Input
+                    label="Confirm password"
+                    placeholder="Password"
+                    type="password"
+                    error={errors.confirmPassword}
+                    {...field}
+                  />
+                )}
+              />
               <Button type="submit" className="w-full text-sm">
-                Log in
+                Register
               </Button>
-              <Link to="/register" className="text-center block -translate-y-3">
-                Or register
+              <Link to="/login" className="text-center block -translate-y-3">
+                Or login
               </Link>
-              {loggedIn === true ? (
-                <p className="text-green-500">Success. Redirecting...</p>
+              {created === true ? (
+                <p className="text-green-500">
+                  User created. Redirecting you to login...
+                </p>
               ) : null}
-              {loggedIn === false ? (
-                <p className="text-red-500">Invalid email or password</p>
+              {created === false ? (
+                <p className="text-red-500">User with that email already exists.</p>
               ) : null}
             </form>
           </div>
@@ -123,4 +147,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

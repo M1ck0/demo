@@ -5,10 +5,13 @@ import "common/styles/normalize.css";
 import "./index.css";
 
 import App from "./shell/app";
+import { RecoilRoot } from "recoil";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById("root")
 );

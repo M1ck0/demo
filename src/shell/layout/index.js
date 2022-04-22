@@ -1,28 +1,27 @@
 import { Routes, Route } from "react-router-dom";
 
-import Header from "./components/header";
-
 import routes from "shell/routes";
 
-import "./layout.css";
+import WithAuth from "common/hoc/with-auth";
 
 const Layout = ({ children }) => {
   return (
-    <div className="layout">
-      <Header />
-      <Routes>
-        {routes.map((route) => {
-          return (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={<route.component />}
-              exact
-            />
-          );
-        })}
-      </Routes>
-    </div>
+    <WithAuth>
+      <div className="layout">
+        <Routes>
+          {routes.map((route) => {
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<route.component />}
+                exact
+              />
+            );
+          })}
+        </Routes>
+      </div>
+    </WithAuth>
   );
 };
 
